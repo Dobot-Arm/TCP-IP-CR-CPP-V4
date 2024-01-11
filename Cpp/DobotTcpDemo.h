@@ -33,4 +33,5 @@ private:
     std::thread threadClearRobotError;
     std::mutex m_mutexValue;
     std::mutex m_mutexState;
+    bool finishState{ false };
 };

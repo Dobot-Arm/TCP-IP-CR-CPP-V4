@@ -16,6 +16,7 @@ DobotTcpDemo::DobotTcpDemo()
     m_CErrorInfoHelper.ParseServoJsonFile("../alarmServo.json");
     threadGetFeedBackInfo = std::thread(&DobotTcpDemo::getFeedBackInfo, this);
     threadGetFeedBackInfo.detach();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     threadClearRobotError = std::thread(&DobotTcpDemo::clearRobotError, this);
     threadClearRobotError.detach();
 }
@@ -69,7 +70,7 @@ void DobotTcpDemo::getCurrentCommandID(std::string recvData, int& currentCommand
 
 void DobotTcpDemo::getFeedBackInfo()
 {
-    std::cout << "Start getFeedBackInfo" << std::endl;
+    std::cout << "Start GetFeedBackInfo" << std::endl;
     while (true) {
         {
             std::unique_lock<std::mutex> lockValue(m_mutexValue);
@@ -89,6 +90,14 @@ void DobotTcpDemo::moveArriveFinish(const Dobot::CJointPoint& pt, int currentCom
                 break;
             }
             if (feedbackData.CurrentCommandId == currentCommandID && feedbackData.RobotMode == 5) {
+                break;
+            }
+        }
+
+        {
+            std::unique_lock<std::mutex> lockValue(m_mutexState);
+            if (finishState) {
+                finishState = false;
                 break;
             }
         }
@@ -113,7 +122,7 @@ std::vector<std::string> DobotTcpDemo::regexRecv(std::string getRecvInfo)
 
 void DobotTcpDemo::clearRobotError()
 {
-    std::cout << "Start clearRobotError" << std::endl;
+    std::cout << "Start CheckRobotError" << std::endl;
     while (true) {
         {
             std::unique_lock<std::mutex> lockValue(m_mutexValue);
@@ -134,6 +143,64 @@ void DobotTcpDemo::clearRobotError()
                             }
                         }
                     }
+                }
+                char choose[50] = { "" };
+                std::cout << "输入1, 将清除错误, 机器继续运行:" << std::endl;
+                std::cin >> choose;
+                std::cout << "您的选择： " << choose << std::endl;
+                try {
+                    int result = std::stoi(choose);
+                    if (result == 1) {
+                        std::cout << "清除错误，机器继续运行！" << std::endl;
+                        m_Dashboard.ClearError();
+                    }
+                } catch (const std::exception& e) {
+                    std::cerr << "Exception caught: " << e.what() << std::endl;
+                } catch (...) {
+                    std::cerr << "Unknown exception caught." << std::endl;
+                }
+            } else {
+                if (feedbackData.RobotMode == 11) {
+                    std::cout << "机器发生碰撞 " << std::endl;
+                    char choose[50] = { "" };
+                    std::cout << "输入1, 将清除碰撞, 机器继续运行: " << std::endl;
+                    std::cin >> choose;
+                    std::cout << "您的选择： " << choose << std::endl;
+                    try {
+                        int result = std::stoi(choose);
+                        if (result == 1) {
+                            std::cout << "清除错误，机器继续运行！" << std::endl;
+                            m_Dashboard.ClearError();
+                        }
+                    } catch (const std::exception& e) {
+                        std::cerr << "Exception caught: " << e.what() << std::endl;
+                    } catch (...) {
+                        std::cerr << "Unknown exception caught." << std::endl;
+                    }
+                }
+
+                if (!feedbackData.EnableStatus) {
+                    std::cout << "机器未使能 " << std::endl;
+                    char choose[50] = { "" };
+                    std::cout << "输入1, 机器将使能: " << std::endl;
+                    std::cin >> choose;
+                    std::cout << "您的选择： " << choose << std::endl;
+                    try {
+                        int result = std::stoi(choose);
+                        if (result == 1) {
+                            std::cout << "机器使能！" << std::endl;
+                            m_Dashboard.EnableRobot();
+                        }
+                    } catch (const std::exception& e) {
+                        std::cerr << "Exception caught: " << e.what() << std::endl;
+                    } catch (...) {
+                        std::cerr << "Unknown exception caught." << std::endl;
+                    }
+                }
+
+                if (!feedbackData.ErrorStatus && feedbackData.EnableStatus && feedbackData.RobotMode == 5) {
+                    std::unique_lock<std::mutex> lockValue(m_mutexState);
+                    finishState = true;
                 }
             }
         }
