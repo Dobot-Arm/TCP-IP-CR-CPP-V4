@@ -3,6 +3,7 @@
 #include "DobotClient.h"
 #include "DescartesPoint.h"
 #include "JointPoint.h"
+#include <mutex>
 
 namespace Dobot
 {
@@ -11,7 +12,8 @@ class CDashboard : public CDobotClient
 public:
     CDashboard();
     virtual ~CDashboard();
-
+    std::string SendRecvMsg(std::string& str);
+    std::string SendRecvMsg(char* cmd);
     /// <summary>
     /// 复位，用于清除错误
     /// </summary>
@@ -297,6 +299,7 @@ private:
     template <typename T>
     std::string toString(T arg);
     std::string strSend{ "" };
+    std::mutex m_mutex;
 };
 
 // 模版函数要定义声明到.h文件里面
@@ -327,89 +330,57 @@ std::string CDashboard::toString(T arg)
 template <typename... Args>
 std::string CDashboard::EnableRobot(Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::string str = "EnableRobot(";
     strSend = str;
     printArg(args...);
     str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(20000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::SetPayload(float load, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "SetPayload(" << std::to_string(load) << ',';
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::DIGroup(Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "DIGroup(";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::DOGroup(Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "DOGroup(";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::InverseKin(const CDescartesPoint& pt, int User, int Tool, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "InverseKin(" + std::to_string(pt.x) + "," + std::to_string(pt.y) + "," + std::to_string(pt.z) + "," +
                std::to_string(pt.rx) + "," + std::to_string(pt.ry) + "," + std::to_string(pt.rz) + "," +
@@ -418,100 +389,65 @@ std::string CDashboard::InverseKin(const CDescartesPoint& pt, int User, int Tool
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::ModbusRTUCreate(int slave_id, int baud, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "ModbusRTUCreate(" + std::to_string(slave_id) + "," + std::to_string(baud) + ",";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::GetDOGroup(Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "GetDOGroup(";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::SetTool485(int baudrate, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "SetTool485(" << std::to_string(baudrate) << ',';
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::SetToolMode(int mode, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "SetToolMode(" << std::to_string(mode) << ',';
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::MovJ(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovJ(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},", pt.x, pt.y, pt.z, pt.rx, pt.ry,
              pt.rz);
@@ -519,20 +455,12 @@ std::string CDashboard::MovJ(const CDescartesPoint& pt, Args... args)
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovJ(const CJointPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovJ(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},", pt.j1, pt.j2, pt.j3, pt.j4, pt.j5,
              pt.j6);
@@ -540,21 +468,13 @@ std::string CDashboard::MovJ(const CJointPoint& pt, Args... args)
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovL(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovL(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},", pt.x, pt.y, pt.z, pt.rx, pt.ry,
              pt.rz);
@@ -562,20 +482,12 @@ std::string CDashboard::MovL(const CDescartesPoint& pt, Args... args)
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovL(const CJointPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovL(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},", pt.j1, pt.j2, pt.j3, pt.j4, pt.j5,
              pt.j6);
@@ -583,21 +495,13 @@ std::string CDashboard::MovL(const CJointPoint& pt, Args... args)
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovLIO(const CDescartesPoint& pt, ModeDistanceIndexStatus& mdis, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovLIO(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},%s,", pt.x, pt.y, pt.z, pt.rx, pt.ry,
              pt.rz, mdis.ToString().c_str());
@@ -605,20 +509,12 @@ std::string CDashboard::MovLIO(const CDescartesPoint& pt, ModeDistanceIndexStatu
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovLIO(const CJointPoint& pt, ModeDistanceIndexStatus& mdis, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovLIO(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},%s,", pt.j1, pt.j2, pt.j3, pt.j4,
              pt.j5, pt.j6, mdis.ToString().c_str());
@@ -626,21 +522,12 @@ std::string CDashboard::MovLIO(const CJointPoint& pt, ModeDistanceIndexStatus& m
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovJIO(const CDescartesPoint& pt, ModeDistanceIndexStatus& mdis, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovJIO(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},%s,", pt.x, pt.y, pt.z, pt.rx, pt.ry,
              pt.rz, mdis.ToString().c_str());
@@ -648,20 +535,12 @@ std::string CDashboard::MovJIO(const CDescartesPoint& pt, ModeDistanceIndexStatu
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MovJIO(const CJointPoint& pt, ModeDistanceIndexStatus& mdis, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd), "MovJIO(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},%s,", pt.j1, pt.j2, pt.j3, pt.j4,
              pt.j5, pt.j6, mdis.ToString().c_str());
@@ -669,21 +548,12 @@ std::string CDashboard::MovJIO(const CJointPoint& pt, ModeDistanceIndexStatus& m
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::Arc(const CDescartesPoint& pt, const CDescartesPoint& pt2, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd),
              "Arc(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},", pt.x, pt.y,
@@ -692,21 +562,12 @@ std::string CDashboard::Arc(const CDescartesPoint& pt, const CDescartesPoint& pt
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::Arc(const CJointPoint& pt, const CJointPoint& pt2, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd),
              "Arc(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},", pt.j1,
@@ -715,21 +576,12 @@ std::string CDashboard::Arc(const CJointPoint& pt, const CJointPoint& pt2, Args.
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::Circle(const CDescartesPoint& pt, const CDescartesPoint& pt2, int count, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd),
              "Circle(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},%d,", pt.x,
@@ -738,21 +590,12 @@ std::string CDashboard::Circle(const CDescartesPoint& pt, const CDescartesPoint&
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::Circle(const CJointPoint& pt, const CJointPoint& pt2, int count, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     char cmd[200];
     snprintf(cmd, sizeof(cmd),
              "Circle(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},%d,",
@@ -761,139 +604,88 @@ std::string CDashboard::Circle(const CJointPoint& pt, const CJointPoint& pt2, in
     printArg(args...);
     strcpy(cmd, strSend.c_str());
     strSend.clear();
-    if (!SendData(cmd)) {
-        strcat(cmd, ":send error");
-        return cmd;
-    }
-
-    return WaitReply(5000);
+    return SendRecvMsg(cmd);
 }
 
 template <typename... Args>
 std::string CDashboard::MoveJog(std::string traceName, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::string str = "MoveJog(" + std::string(traceName) + ",";
     strSend = str;
     printArg(args...);
     str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::StartPath(std::string traceName, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::string str = "StartPath(" + std::string(traceName) + ",";
     strSend = str;
     printArg(args...);
     str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::RelMovJTool(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "RelMovJTool(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << "," << pt.ry << "," << pt.rz << ",";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::RelMovLTool(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "RelMovLTool(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << "," << pt.ry << "," << pt.rz << ",";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::RelMovJUser(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "RelMovJUser(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << "," << pt.ry << "," << pt.rz << ",";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::RelMovLUser(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "RelMovLUser(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << "," << pt.ry << "," << pt.rz << ",";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::RelJointMovJ(const CJointPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "RelJointMovJ(" << pt.j1 << ',' << pt.j2 << ',' << pt.j3 << ',' << pt.j4 << "," << pt.j5 << "," << pt.j6
         << ",";
@@ -901,51 +693,34 @@ std::string CDashboard::RelJointMovJ(const CJointPoint& pt, Args... args)
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::ServoJ(const CJointPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "ServoJ(" << pt.j1 << ',' << pt.j2 << ',' << pt.j3 << ',' << pt.j4 << ',' << pt.j5 << ',' << pt.j6 << ',';
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 template <typename... Args>
 std::string CDashboard::ServoP(const CDescartesPoint& pt, Args... args)
 {
-    if (!IsConnected()) {
-        return "device does not connected!!!";
-    }
-
     std::ostringstream oss;
     oss << "ServoP(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ',';
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;
     strSend.clear();
-    if (!SendData(str)) {
-        return str + ":send error";
-    }
 
-    return WaitReply(5000);
+    return SendRecvMsg(str);
 }
 
 }    // namespace Dobot
