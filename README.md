@@ -310,7 +310,7 @@ typora-root-url: ./picture
 
    3. 连接上位机DobotStudio Pro，连接机器，把机器模式切换至TCP/IP模式
 
-      ![](Z:/dobot_home/v4/TCP-IP-CR-Python-V4/picture/checkTcpMode.png)
+      ![](./checkTcpMode.png)
 
 
 
