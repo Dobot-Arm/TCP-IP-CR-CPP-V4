@@ -42,10 +42,6 @@ typora-root-url: ./picture
 
    # 2. 技术支持
 
-   在使用过程中如遇问题或者一些建议， 您可以通过以下方式获取dobot的技术支持 :
-
-   * 发送邮件到futingxing@dobot-robots.com，详细描述您遇到的问题和使用场景
-   * 发送邮件到 wuyongfeng@dobot-robots.com ，详细描述您遇到的问题和使用场景
 
    
 
