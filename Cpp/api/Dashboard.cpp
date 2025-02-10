@@ -57,6 +57,13 @@ std::string CDashboard::PowerOn()
     return SendRecvMsg(str);
 }
 
+std::string CDashboard::RequestControl()
+{
+    std::string str = "RequestControl()";
+
+    return SendRecvMsg(str);
+}
+
 std::string CDashboard::EmergencyStop(int value)
 {
     std::string str = "EmergencyStop(" + std::to_string(value) + ")";
@@ -880,6 +887,256 @@ std::string CDashboard::ServoP(const CDescartesPoint& pt)
     std::ostringstream oss;
     oss << "ServoP(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ')';
     std::string str = oss.str();
+
+    return SendRecvMsg(str);
+}
+
+//轨迹复现函数
+std::string CDashboard::SetResumeOffset(double distance)
+{
+    std::ostringstream oss;
+    std::string str = "SetResumeOffset(" + std::to_string(distance) + ")";
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::PathRecovery()
+{
+    std::string str = "PathRecovery()";
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::PathRecoveryStatus()
+{
+    std::string str = "PathRecoveryStatus()";
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::PathRecoveryStop()
+{
+    std::string str = "PathRecoveryStop()";
+
+    return SendRecvMsg(str);
+}
+
+//日志导出函数
+std::string CDashboard::LogExportUSB(int range)
+{
+    std::string str = "LogExportUSB(" + std::to_string(range) + ")";
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::GetExportStatus()
+{
+    std::string str = "GetLogExportStatus()";
+
+    return SendRecvMsg(str);
+}
+
+//力控指令
+std::string CDashboard::EnableFTSensor(int status)
+{
+    std::string str = "EnableFTSensor(" + std::to_string(status) + ")";
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::SixForceHome()
+{
+    std::string str = "SixForceHome()";
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::GetForce(int tool=-1)
+{   
+    if (tool==-1) {
+        std::string str = "GetForce()";
+        return SendRecvMsg(str);
+    }
+    else {
+        std::string str = "GetForce("+toString(tool)+")";
+        return SendRecvMsg(str);
+    }
+}
+
+std::string CDashboard::ForceDriveMode(const CDescartesPoint& pt,int user=-1)
+{
+    if (user==-1) {
+        std::ostringstream oss;
+        oss << "ForceDriveMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}'<<')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+        }
+    else {
+        std::ostringstream oss;
+        oss << "ForceDriveMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','<< toString(user) << ')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+    }
+}
+
+std::string CDashboard::ForceDriveSpeed(int speed)
+{   
+    std::string str = "ForceDriveSpeed("+toString(speed)+")";
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::FCForceMode(const CDescartesPoint& pt, const CForcePoint& force, int reference=-1, int user=-1, int tool=-1)
+{
+    if(tool!=-1) {
+        std::ostringstream oss;
+        oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz <<'}' << ','
+            << "reference=" << reference << ',' << "user=" << user << ',' << "tool=" << tool << ')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+    }
+    else if(user!=-1) {
+        std::ostringstream oss;
+        oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << '}' <<','
+            << "reference=" << reference << ',' << "user=" << user << ')'; 
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+    }
+    else if(reference!=-1) {
+        std::ostringstream oss;
+        oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << '}' <<','
+            << "reference=" << reference << ')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+    }
+    else {
+        std::ostringstream oss;
+        oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << '}' <<')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+    }
+}
+
+std::string CDashboard::FCSetDeviation(const CDescartesPoint& pt, int controltype=-1){
+    if (controltype == -1) {
+        std::ostringstream oss;
+        oss << "FCSetDeviation({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}'<<')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+        }
+    else {
+        std::ostringstream oss;
+        oss << "FCSetDeviation({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<',' << toString(controltype) << ')';
+        std::string str = oss.str();
+
+        return SendRecvMsg(str);
+    }
+
+}
+
+std::string CDashboard::FCSetForceLimit(const CDescartesPoint& pt){
+    std::ostringstream oss;
+    oss << "FCSetForceLimit(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ')';
+    std::string str = oss.str();
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::FCSetMass(const CDescartesPoint& pt){
+    std::ostringstream oss;
+    oss << "FCSetMass(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ')';
+    std::string str = oss.str();
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::FCSetDamping(const CDescartesPoint& pt){
+    std::ostringstream oss;
+    oss << "FCSetDamping(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ')';
+    std::string str = oss.str();
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::FCOff()
+{
+    std::string str = "FCOff()";
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::FCSetForceSpeedLimit(const CDescartesPoint& pt){
+    std::ostringstream oss;
+    oss << "FCSetForceSpeedLimit(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ')';
+    std::string str = oss.str();
+
+    return SendRecvMsg(str);
+}
+
+std::string CDashboard::FCSetForce(const CDescartesPoint& pt){
+    std::ostringstream oss;
+    oss << "FCSetForce(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ')';
+    std::string str = oss.str();
+
+    return SendRecvMsg(str);
+}
+
+//460新增运动指令
+std::string CDashboard::RelPointTool(const CDescartesPoint& pt,const COffsetPoint& pt2)
+{
+    char cmd[200];
+    snprintf(cmd, sizeof(cmd), "RelPointTool(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},{%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})", pt.x, pt.y, pt.z, pt.rx, pt.ry,
+             pt.rz,pt2.offsetX, pt2.offsetY, pt2.offsetZ, pt2.offsetRx, pt2.offsetRy, pt2.offsetRz);
+
+    return SendRecvMsg(cmd);
+}
+
+std::string CDashboard::RelPointTool(const CJointPoint& pt,const COffsetPoint& pt2)
+{
+    char cmd[200];
+    snprintf(cmd, sizeof(cmd), "RelPointTool(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},{%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})", pt.j1, pt.j2, pt.j3, pt.j4, pt.j5,
+             pt.j6,pt2.offsetX, pt2.offsetY, pt2.offsetZ, pt2.offsetRx, pt2.offsetRy, pt2.offsetRz);
+
+    return SendRecvMsg(cmd);
+}
+
+std::string CDashboard::RelPointUser(const CDescartesPoint& pt,const COffsetPoint& pt2)
+{
+    char cmd[200];
+    snprintf(cmd, sizeof(cmd), "RelPointUser(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},{%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})", pt.x, pt.y, pt.z, pt.rx, pt.ry,
+             pt.rz,pt2.offsetX, pt2.offsetY, pt2.offsetZ, pt2.offsetRx, pt2.offsetRy, pt2.offsetRz);
+
+    return SendRecvMsg(cmd);
+}
+
+std::string CDashboard::RelPointUser(const CJointPoint& pt,const COffsetPoint& pt2)
+{
+    char cmd[200];
+    snprintf(cmd, sizeof(cmd), "RelPointTool(pose={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},{%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})", pt.j1, pt.j2, pt.j3, pt.j4, pt.j5,
+             pt.j6,pt2.offsetX, pt2.offsetY, pt2.offsetZ, pt2.offsetRx, pt2.offsetRy, pt2.offsetRz);
+
+
+    return SendRecvMsg(cmd);
+}
+
+template <typename... Args>
+std::string CDashboard::RelJoint(const CJointPoint& pt, Args... args)
+{
+    std::unique_lock<std::mutex> lockValue(m_mutexSend);
+    std::ostringstream oss;
+    oss << "RelJoint(" << pt.j1 << ',' << pt.j2 << ',' << pt.j3 << ',' << pt.j4 << "," << pt.j5 << "," << pt.j6
+        << ",";
+    strSend = oss.str();
+    printArg(args...);
+    std::string str = strSend;
+    strSend.clear();
 
     return SendRecvMsg(str);
 }
