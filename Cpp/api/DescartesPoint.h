@@ -45,6 +45,88 @@ public:
     }
 };
 
+struct CForcePoint
+{
+    public:
+        /// <summary>
+        /// X 轴目标力，单位：毫米
+        /// </summary>
+        double fx;
+
+        /// <summary>
+        /// Y 轴目标力，单位：毫米
+        /// </summary>
+        double fy;
+
+        /// <summary>
+        /// Z 轴目标力，单位：毫米
+        /// </summary>
+        double fz;
+
+        /// <summary>
+        /// Rx 轴目标力，单位：度
+        /// </summary>
+        double frx;
+
+        /// <summary>
+        /// Ry 轴目标力，单位：度
+        /// </summary>
+        double fry;
+
+        /// <summary>
+        /// Rz 轴目标力，单位：度
+        /// </summary>
+        double frz;
+
+        std::string ToString()
+        {
+            std::ostringstream oss;
+            oss << fx << ',' << fy << ',' << fz << ',' << frx << ',' << fry << ',' << frz;
+            return oss.str();
+        }
+};
+
+struct COffsetPoint
+{
+    public:
+        /// <summary>
+        /// X 轴偏移量
+        /// </summary>
+        double offsetX;
+
+        /// <summary>
+        /// Y 轴偏移量
+        /// </summary>
+        double offsetY;
+
+        /// <summary>
+        /// Z 轴偏移量
+        /// </summary>
+        double offsetZ;
+
+        /// <summary>
+        /// Rx 轴偏移量
+        /// </summary>
+        double offsetRx;
+
+        /// <summary>
+        /// Ry 轴偏移量
+        /// </summary>
+        double offsetRy;
+
+        /// <summary>
+        /// Rz 轴偏移量
+        /// </summary>
+        double offsetRz;
+
+        std::string ToString()
+        {
+            std::ostringstream oss;
+            oss << offsetX << ',' << offsetY << ',' << offsetZ << ',' << offsetRx << ',' << offsetRy << ',' << offsetRz;
+            return oss.str();
+        }
+};
+
 struct ModeDistanceIndexStatus
 {
 public:
