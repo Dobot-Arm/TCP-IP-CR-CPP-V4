@@ -70,7 +70,49 @@ public:
 
     std::string User(int index);
     std::string Tool(int index);
+
+    // 轨迹恢复指令
+    std::string SetResumeOffset(double distance);
+    std::string PathRecovery();
+    std::string PathRecoveryStop();
+    std::string PathRecoveryStatus();
+
+    // 日志导出指令
+    std::string LogExportUSB(int range);
+    std::string GetExportStatus();
+
+    // 力控指令
+    std::string EnableFTSensor(int status);
+    std::string SixForceHome();
+    std::string GetForce(int tool);
+    std::string ForceDriveMode(const CDescartesPoint& pt,int user);
+    std::string ForceDriveSpeed(int speed);
+    std::string FCForceMode(const CDescartesPoint& pt,const CForcePoint& force,int reference, int user, int tool);
+    std::string FCSetDeviation(const CDescartesPoint& pt, int controltype);
+    std::string FCSetForceLimit(const CDescartesPoint& pt);
+    std::string FCSetMass(const CDescartesPoint& pt);
+    std::string FCSetDamping(const CDescartesPoint& pt);
+    std::string FCOff();
+    std::string FCSetForceSpeedLimit(const CDescartesPoint& pt);
+    std::string FCSetForce(const CDescartesPoint& pt);
+
+    //460新增运动指令
+    std::string RelPointTool(const CDescartesPoint& pt,const COffsetPoint& pt2);
+    std::string RelPointTool(const CJointPoint& pt,const COffsetPoint& pt2);
+    std::string RelPointUser(const CDescartesPoint& pt,const COffsetPoint& pt2);
+    std::string RelPointUser(const CJointPoint& pt,const COffsetPoint& pt2);
+    template <typename... Args>
+    std::string RelJoint(const CJointPoint& pt,Args... args);
+
+
+
     std::string RobotMode();
+
+    /// <summary>
+    /// 请求切换TCP模式
+    /// </summary>
+    /// <returns>返回执行结果的描述信息</returns>
+    std::string RequestControl();
 
     std::string SetPayload(float load);
     template <typename... Args>
@@ -85,6 +127,7 @@ public:
     std::string Stop();
     std::string Pause();
     std::string Continue();
+    
 
     std::string PayLoad(double weight, double inertia);
     std::string DOInstant(int index, int status);
@@ -748,10 +791,13 @@ std::string CDashboard::ServoP(const CDescartesPoint& pt, Args... args)
     oss << "ServoP(" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << ',';
     strSend = oss.str();
     printArg(args...);
-    std::string str = strSend;
+    std::string str = strSend; 
     strSend.clear();
 
     return SendRecvMsg(str);
 }
+
+
+
 
 }    // namespace Dobot
