@@ -143,11 +143,23 @@ public:
 
     std::string SetArmOrientation(int LorR);
     std::string SetArmOrientation(int LorR, int UorD, int ForN, int Config6);
-    std::string PositiveKin(const CDescartesPoint& pt, int User, int Tool);
-    std::string InverseKin(const CDescartesPoint& pt, int User, int Tool);
+    std::string PositiveKin(const CJointPoint& pt, int User, int Tool);
+    std::string InverseKin(const CDescartesPoint& pt);
 
     template <typename... Args>
-    std::string InverseKin(const CDescartesPoint& pt, int User, int Tool, Args... args);
+    std::string InverseKin(const CDescartesPoint& pt, Args... args);
+
+    std::string CheckOddMovL(const CJointPoint& p1, const CJointPoint& p2);
+    template <typename... Args>
+    std::string CheckOddMovL(const CJointPoint& p1, const CJointPoint& p2, Args... args);
+
+    std::string CheckOddMovJ(const CJointPoint& p1, const CJointPoint& p2);
+    template <typename... Args>
+    std::string CheckOddMovJ(const CJointPoint& p1, const CJointPoint& p2, Args... args);
+
+    std::string CheckOddMovC(const CJointPoint& p1, const CJointPoint& p2, const CJointPoint& p3);
+    template <typename... Args>
+    std::string CheckOddMovC(const CJointPoint& p1, const CJointPoint& p2, const CJointPoint& p3, Args... args);
 
     std::string SetCollisionLevel(int level);
     std::string GetAngle();
@@ -431,13 +443,58 @@ std::string CDashboard::DOGroup(Args... args)
 }
 
 template <typename... Args>
-std::string CDashboard::InverseKin(const CDescartesPoint& pt, int User, int Tool, Args... args)
+std::string CDashboard::InverseKin(const CDescartesPoint& pt, Args... args)
 {
     std::unique_lock<std::mutex> lockValue(m_mutexSend);
     std::ostringstream oss;
     oss << "InverseKin(" + std::to_string(pt.x) + "," + std::to_string(pt.y) + "," + std::to_string(pt.z) + "," +
-               std::to_string(pt.rx) + "," + std::to_string(pt.ry) + "," + std::to_string(pt.rz) + "," +
-               std::to_string(User) + "," + std::to_string(Tool);
+               std::to_string(pt.rx) + "," + std::to_string(pt.ry) + "," + std::to_string(pt.rz);
+    strSend = oss.str();
+    printArg(args...);
+    std::string str = strSend;
+    strSend.clear();
+
+    return SendRecvMsg(str);
+}
+
+template <typename... Args>
+std::string CDashboard::CheckOddMovL(const CJointPoint& p1, const CJointPoint& p2, Args... args)
+{
+    std::unique_lock<std::mutex> lockValue(m_mutexSend);
+    std::ostringstream oss;
+    oss << "CheckOddMovL(joint={" << p1.j1 << "," << p1.j2 << "," << p1.j3 << "," << p1.j4 << "," << p1.j5 << "," << p1.j6
+        << "},joint={" << p2.j1 << "," << p2.j2 << "," << p2.j3 << "," << p2.j4 << "," << p2.j5 << "," << p2.j6 << "},";
+    strSend = oss.str();
+    printArg(args...);
+    std::string str = strSend;
+    strSend.clear();
+
+    return SendRecvMsg(str);
+}
+
+template <typename... Args>
+std::string CDashboard::CheckOddMovJ(const CJointPoint& p1, const CJointPoint& p2, Args... args)
+{
+    std::unique_lock<std::mutex> lockValue(m_mutexSend);
+    std::ostringstream oss;
+    oss << "CheckOddMovJ(joint={" << p1.j1 << "," << p1.j2 << "," << p1.j3 << "," << p1.j4 << "," << p1.j5 << "," << p1.j6
+        << "},joint={" << p2.j1 << "," << p2.j2 << "," << p2.j3 << "," << p2.j4 << "," << p2.j5 << "," << p2.j6 << "},";
+    strSend = oss.str();
+    printArg(args...);
+    std::string str = strSend;
+    strSend.clear();
+
+    return SendRecvMsg(str);
+}
+
+template <typename... Args>
+std::string CDashboard::CheckOddMovC(const CJointPoint& p1, const CJointPoint& p2, const CJointPoint& p3, Args... args)
+{
+    std::unique_lock<std::mutex> lockValue(m_mutexSend);
+    std::ostringstream oss;
+    oss << "CheckOddMovC(joint={" << p1.j1 << "," << p1.j2 << "," << p1.j3 << "," << p1.j4 << "," << p1.j5 << "," << p1.j6
+        << "},joint={" << p2.j1 << "," << p2.j2 << "," << p2.j3 << "," << p2.j4 << "," << p2.j5 << "," << p2.j6
+        << "},joint={" << p3.j1 << "," << p3.j2 << "," << p3.j3 << "," << p3.j4 << "," << p3.j5 << "," << p3.j6 << "},";
     strSend = oss.str();
     printArg(args...);
     std::string str = strSend;

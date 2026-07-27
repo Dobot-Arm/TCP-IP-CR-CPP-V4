@@ -67,8 +67,24 @@ void DobotTcpDemo::moveRobot()
 
     m_Dashboard.SetArmOrientation(1);
     m_Dashboard.SetArmOrientation(1, 1, 1, 1);
-    // m_Dashboard.PositiveKin( CDescartesPoint& pt, int User, int Tool);
-    // m_Dashboard.InverseKin( CDescartesPoint& pt, int User, int Tool);
+    // m_Dashboard.PositiveKin(CJointPoint& pt, int User, int Tool);
+    // m_Dashboard.InverseKin(CDescartesPoint& pt);
+    // m_Dashboard.InverseKin(CDescartesPoint& pt, string useJointNear, string jointNear, string user, string tool);
+
+    Dobot::CJointPoint p1;
+    p1.j1 = 0; p1.j2 = 0; p1.j3 = 90; p1.j4 = 0; p1.j5 = 0; p1.j6 = 0;
+    Dobot::CJointPoint p2;
+    p2.j1 = 90; p2.j2 = 30; p2.j3 = 0; p2.j4 = 0; p2.j5 = 0; p2.j6 = 0;
+    Dobot::CJointPoint p3;
+    p3.j1 = 60; p3.j2 = 30; p3.j3 = 0; p3.j4 = 0; p3.j5 = 0; p3.j6 = 0;
+
+    m_Dashboard.CheckOddMovL(p1, p2);
+    m_Dashboard.CheckOddMovL(p1, p2, "user=1", "tool=1", "a=50", "v=50", "cp=0");
+    m_Dashboard.CheckOddMovJ(p1, p2);
+    m_Dashboard.CheckOddMovJ(p1, p2, "a=50", "v=50", "cp=0");
+    m_Dashboard.CheckOddMovC(p1, p2, p3);
+    m_Dashboard.CheckOddMovC(p1, p2, p3, "user=1", "tool=1", "a=50", "v=50", "cp=0");
+
     m_Dashboard.SetCollisionLevel(1);
     m_Dashboard.GetAngle();
     m_Dashboard.GetPose();

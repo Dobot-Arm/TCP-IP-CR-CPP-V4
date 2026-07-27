@@ -270,22 +270,56 @@ std::string CDashboard::SetPayload(std::string name)
     return SendRecvMsg(str);
 };
 
-std::string CDashboard::PositiveKin(const CDescartesPoint& pt, int User, int Tool)
+std::string CDashboard::PositiveKin(const CJointPoint& pt, int User, int Tool)
 {
-    std::string str = "PositiveKin(" + std::to_string(pt.x) + "," + std::to_string(pt.y) + "," + std::to_string(pt.z) +
-                      "," + std::to_string(pt.rx) + "," + std::to_string(pt.ry) + "," + std::to_string(pt.y) + "," +
+    std::string str = "PositiveKin(" + std::to_string(pt.j1) + "," + std::to_string(pt.j2) + "," +
+                      std::to_string(pt.j3) + "," + std::to_string(pt.j4) + "," +
+                      std::to_string(pt.j5) + "," + std::to_string(pt.j6) + "," +
                       std::to_string(User) + "," + std::to_string(Tool) + ")";
 
     return SendRecvMsg(str);
 };
 
-std::string CDashboard::InverseKin(const CDescartesPoint& pt, int User, int Tool)
+std::string CDashboard::InverseKin(const CDescartesPoint& pt)
 {
     std::string str = "InverseKin(" + std::to_string(pt.x) + "," + std::to_string(pt.y) + "," + std::to_string(pt.z) +
-                      "," + std::to_string(pt.rx) + "," + std::to_string(pt.ry) + "," + std::to_string(pt.y) + "," +
-                      std::to_string(User) + "," + std::to_string(Tool) + ")";
+                      "," + std::to_string(pt.rx) + "," + std::to_string(pt.ry) + "," + std::to_string(pt.rz) + ")";
 
     return SendRecvMsg(str);
+};
+
+std::string CDashboard::CheckOddMovL(const CJointPoint& p1, const CJointPoint& p2)
+{
+    char cmd[300];
+    snprintf(cmd, sizeof(cmd),
+             "CheckOddMovL(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})",
+             p1.j1, p1.j2, p1.j3, p1.j4, p1.j5, p1.j6,
+             p2.j1, p2.j2, p2.j3, p2.j4, p2.j5, p2.j6);
+
+    return SendRecvMsg(cmd);
+};
+
+std::string CDashboard::CheckOddMovJ(const CJointPoint& p1, const CJointPoint& p2)
+{
+    char cmd[300];
+    snprintf(cmd, sizeof(cmd),
+             "CheckOddMovJ(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})",
+             p1.j1, p1.j2, p1.j3, p1.j4, p1.j5, p1.j6,
+             p2.j1, p2.j2, p2.j3, p2.j4, p2.j5, p2.j6);
+
+    return SendRecvMsg(cmd);
+};
+
+std::string CDashboard::CheckOddMovC(const CJointPoint& p1, const CJointPoint& p2, const CJointPoint& p3)
+{
+    char cmd[400];
+    snprintf(cmd, sizeof(cmd),
+             "CheckOddMovC(joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f},joint={%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f})",
+             p1.j1, p1.j2, p1.j3, p1.j4, p1.j5, p1.j6,
+             p2.j1, p2.j2, p2.j3, p2.j4, p2.j5, p2.j6,
+             p3.j1, p3.j2, p3.j3, p3.j4, p3.j5, p3.j6);
+
+    return SendRecvMsg(cmd);
 };
 
 std::string CDashboard::SetCollisionLevel(int level)
