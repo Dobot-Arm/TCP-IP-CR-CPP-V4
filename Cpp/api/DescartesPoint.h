@@ -49,32 +49,32 @@ struct CForcePoint
 {
     public:
         /// <summary>
-        /// X 轴目标力，单位：毫米
+        /// X 轴目标力，单位：N
         /// </summary>
         double fx;
 
         /// <summary>
-        /// Y 轴目标力，单位：毫米
+        /// Y 轴目标力，单位：N
         /// </summary>
         double fy;
 
         /// <summary>
-        /// Z 轴目标力，单位：毫米
+        /// Z 轴目标力，单位：N
         /// </summary>
         double fz;
 
         /// <summary>
-        /// Rx 轴目标力，单位：度
+        /// Rx 轴目标力，单位：N/m
         /// </summary>
         double frx;
 
         /// <summary>
-        /// Ry 轴目标力，单位：度
+        /// Ry 轴目标力，单位：N/m
         /// </summary>
         double fry;
 
         /// <summary>
-        /// Rz 轴目标力，单位：度
+        /// Rz 轴目标力，单位：N/m
         /// </summary>
         double frz;
 

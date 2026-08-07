@@ -87,7 +87,7 @@ public:
     std::string GetForce(int tool);
     std::string ForceDriveMode(const CDescartesPoint& pt,int user);
     std::string ForceDriveSpeed(int speed);
-    std::string FCForceMode(const CDescartesPoint& pt,const CForcePoint& force,int reference, int user, int tool);
+    std::string FCForceMode(const CDescartesPoint& pt, const CForcePoint& force, int reference = -1, int user = -1, int tool = -1);
     std::string FCSetDeviation(const CDescartesPoint& pt, int controltype);
     std::string FCSetForceLimit(const CDescartesPoint& pt);
     std::string FCSetMass(const CDescartesPoint& pt);

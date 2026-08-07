@@ -1046,12 +1046,12 @@ std::string CDashboard::ForceDriveSpeed(int speed)
     return SendRecvMsg(str);
 }
 
-std::string CDashboard::FCForceMode(const CDescartesPoint& pt, const CForcePoint& force, int reference=-1, int user=-1, int tool=-1)
+std::string CDashboard::FCForceMode(const CDescartesPoint& pt, const CForcePoint& force, int reference, int user, int tool)
 {
     if(tool!=-1) {
         std::ostringstream oss;
         oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
-            << "{" << force.fx << ',' << force.fy << ',' << force.fz <<'}' << ','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << ',' << force.frx << ',' << force.fry << ',' << force.frz << '}' << ','
             << "reference=" << reference << ',' << "user=" << user << ',' << "tool=" << tool << ')';
         std::string str = oss.str();
 
@@ -1060,7 +1060,7 @@ std::string CDashboard::FCForceMode(const CDescartesPoint& pt, const CForcePoint
     else if(user!=-1) {
         std::ostringstream oss;
         oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
-            << "{" << force.fx << ',' << force.fy << ',' << force.fz << '}' <<','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << ',' << force.frx << ',' << force.fry << ',' << force.frz << '}' << ','
             << "reference=" << reference << ',' << "user=" << user << ')'; 
         std::string str = oss.str();
 
@@ -1069,7 +1069,7 @@ std::string CDashboard::FCForceMode(const CDescartesPoint& pt, const CForcePoint
     else if(reference!=-1) {
         std::ostringstream oss;
         oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
-            << "{" << force.fx << ',' << force.fy << ',' << force.fz << '}' <<','
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << ',' << force.frx << ',' << force.fry << ',' << force.frz << '}' << ','
             << "reference=" << reference << ')';
         std::string str = oss.str();
 
@@ -1078,7 +1078,7 @@ std::string CDashboard::FCForceMode(const CDescartesPoint& pt, const CForcePoint
     else {
         std::ostringstream oss;
         oss << "FCForceMode({" << pt.x << ',' << pt.y << ',' << pt.z << ',' << pt.rx << ',' << pt.ry << ',' << pt.rz << '}' <<','
-            << "{" << force.fx << ',' << force.fy << ',' << force.fz << '}' <<')';
+            << "{" << force.fx << ',' << force.fy << ',' << force.fz << ',' << force.frx << ',' << force.fry << ',' << force.frz << '}' << ')';
         std::string str = oss.str();
 
         return SendRecvMsg(str);
